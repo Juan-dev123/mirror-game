@@ -50,12 +50,12 @@ public class Grid {
 		this.down = down;
 	}
 
-	public Mirror getTypeMirror() {
-		return typeMirror;
+	public int getTypeMirror() {
+		return typeMirror.ordinal();
 	}
 
-	public void setTypeMirror(Mirror typeMirror) {
-		this.typeMirror = typeMirror;
+	public void setTypeMirror(int typeMirror) {
+		this.typeMirror = Mirror.values()[typeMirror];
 	}
 	
 	
