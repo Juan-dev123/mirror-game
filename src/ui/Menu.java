@@ -54,18 +54,37 @@ public class Menu {
 		try {
 			board = new Board(columns, rows, mirrors);
 			System.out.println(board.printBoard());
+			String coordinate = read.nextLine();
+			int length = coordinate.length();
+			if(length>2) {
+				if(coordinate.charAt(length)-2=='V' || coordinate.charAt(length)-2=='H') {
+					
+				}
+			}else {
+				int column = coordinate.charAt(length-1)-64;
+				int row = Integer.parseInt(coordinate.substring(0, length-1));
+				int direction = getDirection(column, row, columns, rows);
+				System.out.println(board.shootLaser(column, row, direction));
+			}
 		}catch(InvalidNumberException ine) {
 			System.out.println(ine.getMessage());
 			
 		}catch(NegativeNumberException nne) {
 			System.out.println(nne.getMessage());
 		}
-		
-		
-		
-		
-		
-		
-		
+	}
+	
+	public int getDirection(int column, int row, int columns, int rows) {
+		int direction;
+		if(row==1) {
+			direction=2;
+		}else if(row==rows) {
+			direction=1;
+		}else if(column==1) {
+			direction=4;
+		}else {
+			direction=3;
+		}
+		return direction;
 	}
 }
