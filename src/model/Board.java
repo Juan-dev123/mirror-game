@@ -105,6 +105,134 @@ public class Board {
 			}
 		}
 	}
+	
+	public String shootLaser(int column, int row, int direction) {
+		Grid start = findGrid(column, row, firstGrid);
+		Coordinate end = shootLaser(start, column, row, direction);
+		Coordinate positionStart = new Coordinate(column, row);
+		String board = printBoard(positionStart, end);
+		return board; //QUITARRRRR
+	}
+	
+	private Coordinate shootLaser(Grid nextGrid, int column, int row, int direction) {
+		switch(nextGrid.getTypeMirror()) {
+		//Left
+		case 1:
+			switch(direction) {
+			//up
+			case 1:
+				direction=4;
+				break;
+			//down
+			case 2:
+				direction=3;
+				break;
+			//left
+			case 3:
+				direction=2;
+				break;
+			//right
+			case 4:
+				direction=1;
+				break;
+			}
+			break;
+		//Right
+		case 2:
+			switch(direction) {
+			//up
+			case 1:
+				direction=3;
+				break;
+			//down
+			case 2:
+				direction=4;
+				break;
+			//left
+			case 3:
+				direction=1;
+				break;
+			//right
+			case 4:
+				direction=2;
+				break;
+			}
+			break;
+		}
+		switch(direction) {
+		//up
+		case 1:
+			if(nextGrid.getUp()!=null) {
+				return shootLaser(nextGrid.getUp(), column, --row, direction);
+			}else {
+				Coordinate coordinate= new Coordinate(column, row);
+				return coordinate;
+			}
+		//down
+		case 2:
+			if(nextGrid.getDown()!=null) {
+				return shootLaser(nextGrid.getDown(), column, ++row, direction);
+			}else {
+				Coordinate coordinate= new Coordinate(column, row);
+				return coordinate;
+			}
+		//left
+		case 3:
+			if(nextGrid.getLeft()!=null) {
+				return shootLaser(nextGrid.getLeft(), --column, row, direction);
+			}else {
+				Coordinate coordinate= new Coordinate(column, row);
+				return coordinate;
+			}
+		//right
+		default:
+			if(nextGrid.getRight()!=null) {
+				return shootLaser(nextGrid.getRight(), ++column, row, direction);
+			}else {
+				Coordinate coordinate= new Coordinate(column, row);
+				return coordinate;
+			}
+		}
+	}
+	
+	private Grid findGrid(int column, int row, Grid grid) {
+		if(row>1) {
+			return findGrid(column, --row, grid.getDown());
+		}else if(column>1) {
+			return findGrid(--column, row, grid.getRight());
+		}else {
+			return grid;
+		}
+	}
+	
+	public String printBoard(Coordinate start, Coordinate end) {
+		String board="";
+		for(int i=1; i<=rows; i++) {
+			for(int j=1; j<=columns; j++) {
+				if(j==start.getColumn() && i==start.getRow()) {
+					board+="[S]";
+				}else if(j==end.getColumn() && i==end.getRow()){
+					board+="[E]";
+				}else {
+					board+="[ ]";
+				}
+				
+			}
+			board+="\n";
+		}
+		return board;
+	}
+	
+	public String printBoard() {
+		String board="";
+		for(int i=0; i<rows; i++) {
+			for(int j=0; j<columns; j++) {
+				board+="[ ]";
+			}
+			board+="\n";
+		}
+		return board;
+	}
 
 	public int getColumns() {
 		return columns;

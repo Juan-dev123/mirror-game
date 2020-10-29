@@ -5,7 +5,7 @@ public class Grid {
 	enum Mirror{
 		NONE,
 		LEFT,
-		RIGTH
+		RIGHT
 	}
 	
 	private Grid right;
