@@ -233,6 +233,16 @@ public class Board {
 		}
 		return board;
 	}
+	
+	//FALTA TERMINARRRRRRRRRRRRRRRRRRRRRR
+	public boolean isACorner(int column, int row) {
+		boolean isACorner = false;
+		Grid grid=findGrid(column, row, firstGrid);
+		if(grid.getUp()==null && grid.getLeft()==null) {
+			isACorner = true;
+		}
+		return isACorner;
+	}
 
 	public int getColumns() {
 		return columns;
