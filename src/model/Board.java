@@ -254,11 +254,11 @@ public class Board {
 			}else{
 				board+=nextGrid.toString(false, 0); 
 			}
-			return printBoard(board, row, ++column, nextGrid.getRight());
+			return printBoard(board, row, ++column, nextGrid.getRight(), selected, inclination);
 		}else if(row<rows){
 			row++;
 			board+="\n";
-			return printBoard(board, row, 1, getBeginningOfRow(row, firstGrid));
+			return printBoard(board, row, 1, getBeginningOfRow(row, firstGrid), selected, inclination);
 		}else{
 			return board;
 		}

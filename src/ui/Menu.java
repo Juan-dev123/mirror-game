@@ -205,7 +205,6 @@ public class Menu {
 					inclination=1;
 					break;
 			}
-			System.out.println(name+": "+board.getMirrorsAdded()+" mirrors remaining");
 			System.out.println(board.exposeAMirror(column, row, inclination, name));
 			if(board.getMirrorsAdded()==0){
 				System.out.println("Congratulations you have won!");
