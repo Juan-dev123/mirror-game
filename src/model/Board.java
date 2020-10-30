@@ -112,32 +112,32 @@ public class Board {
 		if(start.getDown()!=null && start.getUp()!=null && start.getLeft()!=null && start.getRight()!=null) {
 			throw new InvalidGridException();
 		}
-		Coordinate end = shootLaser(start, column, row, direction);
-		Coordinate positionStart = new Coordinate(column, row);
+		Grid end = shootLaser(start, direction);
+		Grid positionStart = findGrid(column, row, firstGrid);
 		String board = printBoard(positionStart, end);
 		return board;
 	}
 	
-	private Coordinate shootLaser(Grid nextGrid, int column, int row, int direction) {
+	private Grid shootLaser(Grid nextGrid, int direction) {
 		switch(nextGrid.getTypeMirror()) {
 		//Left
 		case 1:
 			switch(direction) {
 			//up
 			case 1:
-				direction=4;
+				direction=3;
 				break;
 			//down
 			case 2:
-				direction=3;
+				direction=4;
 				break;
 			//left
 			case 3:
-				direction=2;
+				direction=1;
 				break;
 			//right
 			case 4:
-				direction=1;
+				direction=2;
 				break;
 			}
 			break;
@@ -146,19 +146,19 @@ public class Board {
 			switch(direction) {
 			//up
 			case 1:
-				direction=3;
+				direction=4;
 				break;
 			//down
 			case 2:
-				direction=4;
+				direction=3;
 				break;
 			//left
 			case 3:
-				direction=1;
+				direction=2;
 				break;
 			//right
 			case 4:
-				direction=2;
+				direction=1;
 				break;
 			}
 			break;
@@ -167,34 +167,30 @@ public class Board {
 		//up
 		case 1:
 			if(nextGrid.getUp()!=null) {
-				return shootLaser(nextGrid.getUp(), column, --row, direction);
+				return shootLaser(nextGrid.getUp(), direction);
 			}else {
-				Coordinate coordinate= new Coordinate(column, row);
-				return coordinate;
+				return nextGrid;
 			}
 		//down
 		case 2:
 			if(nextGrid.getDown()!=null) {
-				return shootLaser(nextGrid.getDown(), column, ++row, direction);
+				return shootLaser(nextGrid.getDown(), direction);
 			}else {
-				Coordinate coordinate= new Coordinate(column, row);
-				return coordinate;
+				return nextGrid;
 			}
 		//left
 		case 3:
 			if(nextGrid.getLeft()!=null) {
-				return shootLaser(nextGrid.getLeft(), --column, row, direction);
+				return shootLaser(nextGrid.getLeft(), direction);
 			}else {
-				Coordinate coordinate= new Coordinate(column, row);
-				return coordinate;
+				return nextGrid;
 			}
 		//right
 		default:
 			if(nextGrid.getRight()!=null) {
-				return shootLaser(nextGrid.getRight(), ++column, row, direction);
+				return shootLaser(nextGrid.getRight(), direction);
 			}else {
-				Coordinate coordinate= new Coordinate(column, row);
-				return coordinate;
+				return nextGrid;
 			}
 		}
 	}
@@ -208,13 +204,26 @@ public class Board {
 			return grid;
 		}
 	}
-	private String printBoard(Coordinate start, Coordinate end) {
+	private String printBoard(Grid start, Grid end) {
 		String board=printBoard("", 1, 1, firstGrid, start, end);
 		return board;
 	}
-	public String printBoard(String board, int row, int column, Grid nextGrid, Coordinate start, Coordinate end) {
-		if(){
-			
+	public String printBoard(String board, int row, int column, Grid nextGrid, Grid start, Grid end) {
+		if(column<=columns){
+			if(nextGrid==start){
+				board+=nextGrid.toString("S");
+			}else if(nextGrid==end){
+				board+=nextGrid.toString("E");
+			}else{
+				board+=nextGrid.toString(true); //CAMBIARRRR
+			}
+			return printBoard(board, row, ++column, nextGrid.getRight(), start, end);
+		}else if(row<rows){
+			row++;
+			board+="\n";
+			return printBoard(board, row, 1, getBeginningOfRow(row, firstGrid), start, end);
+		}else{
+			return board;
 		}
 	}
 	public String printBoard(){
@@ -223,7 +232,7 @@ public class Board {
 	}
 	public String printBoard(String board, int row, int column, Grid nextGrid) {
 		if(column<=columns){
-			board+=nextGrid.toString(false);
+			board+=nextGrid.toString(true); //CAMBIARRRRR
 			return printBoard(board, row, ++column, nextGrid.getRight());
 		}else if(row<rows){
 			row++;

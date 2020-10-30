@@ -167,6 +167,7 @@ public class Menu {
 					System.out.println(name+": "+board.getMirrorsAdded()+" mirrors remaining");
 					try {
 						System.out.println(board.shootLaser(column, row, direction));
+						shootLaser(board, name);
 					}catch(InvalidGridException ige) {
 						System.out.println(ige.getMessage());
 						shootLaser(board, name);
