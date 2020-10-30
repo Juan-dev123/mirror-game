@@ -86,8 +86,8 @@ public class Grid {
 				case 2:
 					if(getTypeMirror()==0){
 						message="[X]";
-					}else if(getTypeMirror()==1){
-						message="[\\]";
+					}else if(getTypeMirror()==2){
+						message="[/]";
 						mirrorVisible=true;
 					}else{
 						message="[*]";

@@ -213,7 +213,11 @@ public class Board {
 			if(nextGrid==start){
 				board+=nextGrid.toString("S");
 			}else if(nextGrid==end){
-				board+=nextGrid.toString("E");
+				if(end==start){
+					board+=nextGrid.toString("J");
+				}else{
+					board+=nextGrid.toString("E");
+				}
 			}else{
 				board+=nextGrid.toString(false, 0); 
 			}
@@ -243,14 +247,31 @@ public class Board {
 		}
 	}
 	
-	public String exposeAMirror(int column, int row, int inclination){
+	public String printBoard(String board, int row, int column, Grid nextGrid, Grid selected, int inclination) {
+		if(column<=columns){
+			if(selected==nextGrid){
+				board+=nextGrid.toString(true, inclination);
+			}else{
+				board+=nextGrid.toString(false, 0); 
+			}
+			return printBoard(board, row, ++column, nextGrid.getRight());
+		}else if(row<rows){
+			row++;
+			board+="\n";
+			return printBoard(board, row, 1, getBeginningOfRow(row, firstGrid));
+		}else{
+			return board;
+		}
+	}
+
+	public String exposeAMirror(int column, int row, int inclination, String name){
 		Grid gridToExpose = findGrid(column, row, firstGrid);
-		gridToExpose.toString(true, inclination);
+		String board = printBoard("", 1, 1, firstGrid, gridToExpose, inclination);
 		if(gridToExpose.isMirrorVisible()){
 			mirrorsAdded--;
 		}
-		String board = printBoard();
-		return board;
+		String message=name+": "+mirrorsAdded+" mirrors\n";
+		return message+board;
 	}
 
 	public boolean isACorner(int column, int row) {

@@ -131,6 +131,7 @@ public class Menu {
 							try{
 								int row = Integer.parseInt(coordinate.substring(0, length-2));
 								int direction = getDirection(column, row, board.getColumns(), board.getRows(), coordinate.charAt(length-1));
+								System.out.println(name+": "+board.getMirrorsAdded()+" mirrors remaining");
 								System.out.println(board.shootLaser(column, row, direction));
 								shootLaser(board, name);
 							}catch(NumberFormatException nfe) {
@@ -198,13 +199,14 @@ public class Menu {
 			int inclination=0;
 			switch(coordinate.charAt(length-1)){
 				case 'R':
-					inclination=1;
-					break;
-				case 'L':
 					inclination=2;
 					break;
+				case 'L':
+					inclination=1;
+					break;
 			}
-			System.out.println(board.exposeAMirror(column, row, inclination));
+			System.out.println(name+": "+board.getMirrorsAdded()+" mirrors remaining");
+			System.out.println(board.exposeAMirror(column, row, inclination, name));
 			if(board.getMirrorsAdded()==0){
 				System.out.println("Congratulations you have won!");
 				showMenu();
