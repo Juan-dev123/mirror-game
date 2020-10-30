@@ -1,4 +1,5 @@
 package model;
+import exceptions.InvalidGridException;
 import exceptions.InvalidNumberException;
 import exceptions.NegativeNumberException;
 
@@ -66,7 +67,7 @@ public class Board {
 	
 	private Grid getBeginningOfRow(Integer row, Grid first) {
 		if(row>1) {
-			getBeginningOfRow(--row, first.getDown());
+			return getBeginningOfRow(--row, first.getDown());
 		}
 		return first;
 	}
@@ -106,12 +107,15 @@ public class Board {
 		}
 	}
 	
-	public String shootLaser(int column, int row, int direction) {
+	public String shootLaser(int column, int row, int direction) throws InvalidGridException{
 		Grid start = findGrid(column, row, firstGrid);
+		if(start.getDown()!=null && start.getUp()!=null && start.getLeft()!=null && start.getRight()!=null) {
+			throw new InvalidGridException();
+		}
 		Coordinate end = shootLaser(start, column, row, direction);
 		Coordinate positionStart = new Coordinate(column, row);
 		String board = printBoard(positionStart, end);
-		return board; //QUITARRRRR
+		return board;
 	}
 	
 	private Coordinate shootLaser(Grid nextGrid, int column, int row, int direction) {
@@ -204,41 +208,42 @@ public class Board {
 			return grid;
 		}
 	}
-	
-	public String printBoard(Coordinate start, Coordinate end) {
-		String board="";
-		for(int i=1; i<=rows; i++) {
-			for(int j=1; j<=columns; j++) {
-				if(j==start.getColumn() && i==start.getRow()) {
-					board+="[S]";
-				}else if(j==end.getColumn() && i==end.getRow()){
-					board+="[E]";
-				}else {
-					board+="[ ]";
-				}
-				
-			}
-			board+="\n";
-		}
+	private String printBoard(Coordinate start, Coordinate end) {
+		String board=printBoard("", 1, 1, firstGrid, start, end);
 		return board;
 	}
-	
-	public String printBoard() {
-		String board="";
-		for(int i=0; i<rows; i++) {
-			for(int j=0; j<columns; j++) {
-				board+="[ ]";
-			}
-			board+="\n";
+	public String printBoard(String board, int row, int column, Grid nextGrid, Coordinate start, Coordinate end) {
+		if(){
+			
 		}
+	}
+	public String printBoard(){
+		String board=printBoard("", 1, 1, firstGrid);
 		return board;
 	}
+	public String printBoard(String board, int row, int column, Grid nextGrid) {
+		if(column<=columns){
+			board+=nextGrid.toString(false);
+			return printBoard(board, row, ++column, nextGrid.getRight());
+		}else if(row<rows){
+			row++;
+			board+="\n";
+			return printBoard(board, row, 1, getBeginningOfRow(row, firstGrid));
+		}else{
+			return board;
+		}
+	}
 	
-	//FALTA TERMINARRRRRRRRRRRRRRRRRRRRRR
 	public boolean isACorner(int column, int row) {
 		boolean isACorner = false;
 		Grid grid=findGrid(column, row, firstGrid);
 		if(grid.getUp()==null && grid.getLeft()==null) {
+			isACorner = true;
+		}else if(grid.getUp()==null && grid.getRight()==null) {
+			isACorner = true;
+		}else if(grid.getDown()==null && grid.getLeft()==null) {
+			isACorner = true;
+		}else if(grid.getRight()==null && grid.getDown()==null) {
 			isACorner = true;
 		}
 		return isACorner;

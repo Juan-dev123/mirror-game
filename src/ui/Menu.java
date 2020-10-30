@@ -2,6 +2,7 @@ package ui;
 
 import java.util.Scanner;
 
+import exceptions.InvalidGridException;
 import exceptions.InvalidNumberException;
 import exceptions.NegativeNumberException;
 import model.Board;
@@ -48,29 +49,19 @@ public class Menu {
 			play();
 		}
 		String name=info[0];
-		int columns = Integer.parseInt(info[1]);
-		int rows = Integer.parseInt(info[2]);
-		int mirrors = Integer.parseInt(info[3]);
 		try {
+			int columns = Integer.parseInt(info[1]);
+			int rows = Integer.parseInt(info[2]);
+			int mirrors = Integer.parseInt(info[3]);
 			board = new Board(columns, rows, mirrors);
 			System.out.println(board.printBoard());
-			String coordinate = read.nextLine();
-			int length = coordinate.length();
-			if(length>2) {
-				if(coordinate.charAt(length)-2=='V' || coordinate.charAt(length)-2=='H') {
-					
-				}
-			}else {
-				int column = coordinate.charAt(length-1)-64;
-				int row = Integer.parseInt(coordinate.substring(0, length-1));
-				int direction = getDirection(column, row, columns, rows);
-				System.out.println(board.shootLaser(column, row, direction));
-			}
+			shootLaser(board, name);
 		}catch(InvalidNumberException ine) {
 			System.out.println(ine.getMessage());
-			
 		}catch(NegativeNumberException nne) {
 			System.out.println(nne.getMessage());
+		}catch(NumberFormatException nfe) {
+			System.out.println("Enter a valid number");
 		}
 	}
 	
@@ -87,4 +78,102 @@ public class Menu {
 		}
 		return direction;
 	}
+	
+	public int getDirection(int column, int row, int columns, int rows, char direction1) {
+		int direction2;
+		if(row==1) {
+			if(column==1) {
+				if(direction1=='V') {
+					direction2=2;
+				}else {
+					direction2=4;
+				}
+			}else {
+				if(direction1=='V') {
+					direction2=2;
+				}else {
+					direction2=3;
+				}
+			}
+		}else if(row==rows) {
+			if(columns==1) {
+				if(direction1=='V') {
+					direction2=1;
+				}else {
+					direction2=4;
+				}
+			}else {
+				if(direction1=='V') {
+					direction2=1;
+				}else {
+					direction2=3;
+				}
+			}
+			direction2=1;
+		}else {
+			direction2=-1;
+		}
+		return direction2;
+	}
+	
+	public void shootLaser(Board board, String name) {
+		String coordinate = read.nextLine().toUpperCase();
+		int length = coordinate.length();
+		if(!coordinate.equalsIgnoreCase("menu")) {
+			if(coordinate.charAt(length-1)=='V' || coordinate.charAt(length-1)=='H') {
+				if(Character.isLetter(coordinate.charAt(length-2))) {
+					if(length<3) {
+						System.out.println("Invalid coordenate. Enter it again");
+						shootLaser(board, name);
+					}else {
+						int column = coordinate.charAt(length-2)-64;
+						try{
+							int row = Integer.parseInt(coordinate.substring(0, length-2));
+							int direction = getDirection(column, row, board.getColumns(), board.getRows(), coordinate.charAt(length-1));
+							System.out.println(board.shootLaser(column, row, direction));
+							shootLaser(board, name);
+						}catch(NumberFormatException nfe) {
+							System.out.println("Invalid coordenate. Enter it again");
+							shootLaser(board, name);
+						}catch(InvalidGridException ige) {
+							System.out.println(ige.getMessage());
+							shootLaser(board, name);
+						}	
+					}
+				}else {
+					int column = coordinate.charAt(length-1)-64;
+					int row = Integer.parseInt(coordinate.substring(0, length-1));
+					if(board.isACorner(column, row)) {
+						System.out.println("Is missing the direction (V/H)");
+						shootLaser(board, name);
+					}else {
+						int direction = getDirection(column, row, board.getColumns(), board.getRows());
+						System.out.println(name+": "+board.getMirrorsAdded()+" mirrors remaining");
+						try {
+							System.out.println(board.shootLaser(column, row, direction));
+						}catch(InvalidGridException ige) {
+							System.out.println(ige.getMessage());
+						}
+					}
+				}	
+			}else {
+				int column = coordinate.charAt(length-1)-64;
+				int row = Integer.parseInt(coordinate.substring(0, length-1));
+				if(board.isACorner(column, row)) {
+					System.out.println("Is missing the direction (V/H)");
+					shootLaser(board, name);
+				}else {
+					int direction = getDirection(column, row, board.getColumns(), board.getRows());
+					System.out.println(name+": "+board.getMirrorsAdded()+" mirrors remaining");
+					try {
+						System.out.println(board.shootLaser(column, row, direction));
+					}catch(InvalidGridException ige) {
+						System.out.println(ige.getMessage());
+						shootLaser(board, name);
+					}
+				}
+			}
+		}
+	}
 }
+

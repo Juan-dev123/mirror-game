@@ -13,9 +13,11 @@ public class Grid {
 	private Grid up;
 	private Grid down;
 	private Mirror typeMirror;
+	private boolean mirrorVisible; 
 	
 	public Grid(int mirror) {
 		typeMirror = Mirror.values()[mirror];
+		mirrorVisible = false;
 	}
 
 	public Grid getRight() {
@@ -57,7 +59,37 @@ public class Grid {
 	public void setTypeMirror(int typeMirror) {
 		this.typeMirror = Mirror.values()[typeMirror];
 	}
-	
+
+	public String toString(boolean selected){
+		String message;
+		if(selected){
+			if(getTypeMirror()==0){
+				message="[X]";
+			}else if(getTypeMirror()==1){
+				message="[\\]";
+				mirrorVisible=true;
+			}else{
+				message="[/]";
+				mirrorVisible=true;
+			}
+		}else{
+			if(mirrorVisible){
+				if(getTypeMirror()==1){
+					message="[\\]";
+				}else{
+					message="[/]";
+				}
+			}else{
+				message="[ ]";
+			}
+		}
+		return message;
+	}
+
+	public String toString(String content){
+		String message="["+content+"]";
+		return message;
+	}
 	
 	
 }
