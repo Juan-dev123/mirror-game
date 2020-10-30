@@ -120,26 +120,49 @@ public class Menu {
 		String coordinate = read.nextLine().toUpperCase();
 		int length = coordinate.length();
 		if(!coordinate.equalsIgnoreCase("menu")) {
-			if(coordinate.charAt(length-1)=='V' || coordinate.charAt(length-1)=='H') {
-				if(Character.isLetter(coordinate.charAt(length-2))) {
-					if(length<3) {
-						System.out.println("Invalid coordenate. Enter it again");
-						shootLaser(board, name);
-					}else {
-						int column = coordinate.charAt(length-2)-64;
-						try{
-							int row = Integer.parseInt(coordinate.substring(0, length-2));
-							int direction = getDirection(column, row, board.getColumns(), board.getRows(), coordinate.charAt(length-1));
-							System.out.println(board.shootLaser(column, row, direction));
+			if(coordinate.charAt(0)!='L'){
+				if(coordinate.charAt(length-1)=='V' || coordinate.charAt(length-1)=='H') {
+					if(Character.isLetter(coordinate.charAt(length-2))) {
+						if(length<3) {
+							System.out.println("Invalid coordenate. Enter it again");
 							shootLaser(board, name);
-						}catch(NumberFormatException nfe) {
+						}else {
+							int column = coordinate.charAt(length-2)-64;
+							try{
+								int row = Integer.parseInt(coordinate.substring(0, length-2));
+								int direction = getDirection(column, row, board.getColumns(), board.getRows(), coordinate.charAt(length-1));
+								System.out.println(board.shootLaser(column, row, direction));
+								shootLaser(board, name);
+							}catch(NumberFormatException nfe) {
+								System.out.println("Invalid coordenate. Enter it again");
+								shootLaser(board, name);
+							}catch(InvalidGridException ige) {
+								System.out.println(ige.getMessage());
+								shootLaser(board, name);
+							}	
+						}
+					}else {
+						int column = coordinate.charAt(length-1)-64;
+						try{
+							int row = Integer.parseInt(coordinate.substring(0, length-1));
+							if(board.isACorner(column, row)) {
+								System.out.println("Is missing the direction (V/H)");
+								shootLaser(board, name);
+							}else {
+								int direction = getDirection(column, row, board.getColumns(), board.getRows());
+								System.out.println(name+": "+board.getMirrorsAdded()+" mirrors remaining");
+								System.out.println(board.shootLaser(column, row, direction));
+								shootLaser(board, name);
+							}
+						}catch(NumberFormatException nfe){
 							System.out.println("Invalid coordenate. Enter it again");
 							shootLaser(board, name);
 						}catch(InvalidGridException ige) {
 							System.out.println(ige.getMessage());
 							shootLaser(board, name);
-						}	
-					}
+						}
+						
+					}	
 				}else {
 					int column = coordinate.charAt(length-1)-64;
 					int row = Integer.parseInt(coordinate.substring(0, length-1));
@@ -151,30 +174,49 @@ public class Menu {
 						System.out.println(name+": "+board.getMirrorsAdded()+" mirrors remaining");
 						try {
 							System.out.println(board.shootLaser(column, row, direction));
+							shootLaser(board, name);
 						}catch(InvalidGridException ige) {
 							System.out.println(ige.getMessage());
+							shootLaser(board, name);
 						}
 					}
-				}	
-			}else {
-				int column = coordinate.charAt(length-1)-64;
-				int row = Integer.parseInt(coordinate.substring(0, length-1));
-				if(board.isACorner(column, row)) {
-					System.out.println("Is missing the direction (V/H)");
-					shootLaser(board, name);
-				}else {
-					int direction = getDirection(column, row, board.getColumns(), board.getRows());
-					System.out.println(name+": "+board.getMirrorsAdded()+" mirrors remaining");
-					try {
-						System.out.println(board.shootLaser(column, row, direction));
-						shootLaser(board, name);
-					}catch(InvalidGridException ige) {
-						System.out.println(ige.getMessage());
-						shootLaser(board, name);
-					}
 				}
+			}else{ //if the first letter is L
+				exposeAMirror(coordinate, length, name);
 			}
 		}
+	}
+
+	private void exposeAMirror(String coordinate, int length, String name){
+		int column = coordinate.charAt(length-2)-64;
+		try{
+			int row = Integer.parseInt(coordinate.substring(1,length-2));
+			if(coordinate.charAt(length-1)!='R' && coordinate.charAt(length-1)!='L'){
+				System.out.println("Invalid inclination. It was expected R or L, but was "+coordinate.charAt(length-1));
+				shootLaser(board, name);
+			}
+			int inclination=0;
+			switch(coordinate.charAt(length-1)){
+				case 'R':
+					inclination=1;
+					break;
+				case 'L':
+					inclination=2;
+					break;
+			}
+			System.out.println(board.exposeAMirror(column, row, inclination));
+			if(board.getMirrorsAdded()==0){
+				System.out.println("Congratulations you have won!");
+				showMenu();
+			}else{
+				shootLaser(board, name);
+			}
+		}catch(NumberFormatException nfe){
+			System.out.println("Invalid coordenate. Enter it again");
+			shootLaser(board, name);
+		}
+		
+
 	}
 }
 

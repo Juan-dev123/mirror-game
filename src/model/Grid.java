@@ -14,10 +14,12 @@ public class Grid {
 	private Grid down;
 	private Mirror typeMirror;
 	private boolean mirrorVisible; 
+	private boolean mirrorPartiallyVisible;
 	
 	public Grid(int mirror) {
 		typeMirror = Mirror.values()[mirror];
 		mirrorVisible = false;
+		mirrorPartiallyVisible = false;
 	}
 
 	public Grid getRight() {
@@ -60,17 +62,38 @@ public class Grid {
 		this.typeMirror = Mirror.values()[typeMirror];
 	}
 
-	public String toString(boolean selected){
-		String message;
+	public boolean isMirrorVisible(){
+		return mirrorVisible;
+	}
+
+	public String toString(boolean selected, int inclination){
+		String message="";
 		if(selected){
-			if(getTypeMirror()==0){
-				message="[X]";
-			}else if(getTypeMirror()==1){
-				message="[\\]";
-				mirrorVisible=true;
-			}else{
-				message="[/]";
-				mirrorVisible=true;
+			switch(inclination){
+				//Left
+				case 1:
+					if(getTypeMirror()==0){
+						message="[X]";
+					}else if(getTypeMirror()==1){
+						message="[\\]";
+						mirrorVisible=true;
+					}else{
+						message="[*]";
+						mirrorPartiallyVisible=true;
+					}
+					break;
+				//Right
+				case 2:
+					if(getTypeMirror()==0){
+						message="[X]";
+					}else if(getTypeMirror()==1){
+						message="[\\]";
+						mirrorVisible=true;
+					}else{
+						message="[*]";
+						mirrorPartiallyVisible=true;
+					}
+					break;
 			}
 		}else{
 			if(mirrorVisible){
@@ -79,6 +102,8 @@ public class Grid {
 				}else{
 					message="[/]";
 				}
+			}else if(mirrorPartiallyVisible){
+				message="[*]";
 			}else{
 				message="[ ]";
 			}

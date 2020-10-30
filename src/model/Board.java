@@ -215,7 +215,7 @@ public class Board {
 			}else if(nextGrid==end){
 				board+=nextGrid.toString("E");
 			}else{
-				board+=nextGrid.toString(true); //CAMBIARRRR
+				board+=nextGrid.toString(false, 0); 
 			}
 			return printBoard(board, row, ++column, nextGrid.getRight(), start, end);
 		}else if(row<rows){
@@ -232,7 +232,7 @@ public class Board {
 	}
 	public String printBoard(String board, int row, int column, Grid nextGrid) {
 		if(column<=columns){
-			board+=nextGrid.toString(true); //CAMBIARRRRR
+			board+=nextGrid.toString(false, 0); 
 			return printBoard(board, row, ++column, nextGrid.getRight());
 		}else if(row<rows){
 			row++;
@@ -243,6 +243,16 @@ public class Board {
 		}
 	}
 	
+	public String exposeAMirror(int column, int row, int inclination){
+		Grid gridToExpose = findGrid(column, row, firstGrid);
+		gridToExpose.toString(true, inclination);
+		if(gridToExpose.isMirrorVisible()){
+			mirrorsAdded--;
+		}
+		String board = printBoard();
+		return board;
+	}
+
 	public boolean isACorner(int column, int row) {
 		boolean isACorner = false;
 		Grid grid=findGrid(column, row, firstGrid);
