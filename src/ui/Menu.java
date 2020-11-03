@@ -5,14 +5,15 @@ import java.util.Scanner;
 import exceptions.InvalidGridException;
 import exceptions.InvalidNumberException;
 import exceptions.NegativeNumberException;
-import model.Board;
+import model.Game;
 
 public class Menu {
 	private Scanner read;
-	private Board board;
+	private Game mirrorGame;
 	
 	public Menu() {
 		read = new Scanner(System.in);
+		mirrorGame = new Game();
 	}
 	
 	public void showMenu() {
@@ -59,10 +60,10 @@ public class Menu {
 			int columns = Integer.parseInt(info[1]);
 			int rows = Integer.parseInt(info[2]);
 			int mirrors = Integer.parseInt(info[3]);
-			board = new Board(columns, rows, mirrors);
-			System.out.println(board.printBoard());
-			shootLaser(board, name);
-			score = board.getScore();
+			mirrorGame.createBoard(columns, rows, mirrors);
+			System.out.println(mirrorGame.getBoard().printBoard());
+			shootLaser(mirrorGame, name);
+			score = mirrorGame.getBoard().getScore();
 		}catch(InvalidNumberException ine) {
 			System.out.println(ine.getMessage());
 		}catch(NegativeNumberException nne) {
@@ -124,16 +125,16 @@ public class Menu {
 		return direction2;
 	}
 	
-	public void shootLaser(Board board, String name) {
+	public void shootLaser(Game game, String name) {
 		String coordinate = read.nextLine().toUpperCase();
 		int length = coordinate.length();
 		if(coordinate.equalsIgnoreCase("cheat")){
 			System.out.println("---------------------------------");
-			System.out.println(board.showMirrors());
+			System.out.println(game.getBoard().showMirrors());
 			System.out.println("---------------------------------");
-			System.out.println(name+": "+board.getMirrorsAdded()+" mirrors remaining");
-			System.out.println(board.printBoard());
-			shootLaser(board, name);
+			System.out.println(name+": "+game.getBoard().getMirrorsAdded()+" mirrors remaining");
+			System.out.println(game.getBoard().printBoard());
+			shootLaser(game, name);
 		}
 		if(!coordinate.equalsIgnoreCase("menu")) {
 			if(coordinate.charAt(0)!='L'){
@@ -141,76 +142,76 @@ public class Menu {
 					if(Character.isLetter(coordinate.charAt(length-2))) {
 						if(length<3) {
 							System.out.println("Invalid coordenate. Enter it again");
-							shootLaser(board, name);
+							shootLaser(game, name);
 						}else {
 							int column = coordinate.charAt(length-2)-64;
 							try{
 								int row = Integer.parseInt(coordinate.substring(0, length-2));
-								int direction = getDirection(column, row, board.getColumns(), board.getRows(), coordinate.charAt(length-1));
-								System.out.println(name+": "+board.getMirrorsAdded()+" mirrors remaining");
-								System.out.println(board.shootLaser(column, row, direction));
-								shootLaser(board, name);
+								int direction = getDirection(column, row, game.getBoard().getColumns(), game.getBoard().getRows(), coordinate.charAt(length-1));
+								System.out.println(name+": "+game.getBoard().getMirrorsAdded()+" mirrors remaining");
+								System.out.println(game.getBoard().shootLaser(column, row, direction));
+								shootLaser(game, name);
 							}catch(NumberFormatException nfe) {
 								System.out.println("Invalid coordenate. Enter it again");
-								shootLaser(board, name);
+								shootLaser(game, name);
 							}catch(InvalidGridException ige) {
 								System.out.println(ige.getMessage());
-								shootLaser(board, name);
+								shootLaser(game, name);
 							}	
 						}
 					}else {
 						int column = coordinate.charAt(length-1)-64;
 						try{
 							int row = Integer.parseInt(coordinate.substring(0, length-1));
-							if(board.isACorner(column, row)) {
+							if(game.getBoard().isACorner(column, row)) {
 								System.out.println("Is missing the direction (V/H)");
-								shootLaser(board, name);
+								shootLaser(game, name);
 							}else {
-								int direction = getDirection(column, row, board.getColumns(), board.getRows());
-								System.out.println(name+": "+board.getMirrorsAdded()+" mirrors remaining");
-								System.out.println(board.shootLaser(column, row, direction));
-								shootLaser(board, name);
+								int direction = getDirection(column, row, game.getBoard().getColumns(), game.getBoard().getRows());
+								System.out.println(name+": "+game.getBoard().getMirrorsAdded()+" mirrors remaining");
+								System.out.println(game.getBoard().shootLaser(column, row, direction));
+								shootLaser(game, name);
 							}
 						}catch(NumberFormatException nfe){
 							System.out.println("Invalid coordenate. Enter it again");
-							shootLaser(board, name);
+							shootLaser(game, name);
 						}catch(InvalidGridException ige) {
 							System.out.println(ige.getMessage());
-							shootLaser(board, name);
+							shootLaser(game, name);
 						}
 						
 					}	
 				}else {
 					int column = coordinate.charAt(length-1)-64;
 					int row = Integer.parseInt(coordinate.substring(0, length-1));
-					if(board.isACorner(column, row)) {
+					if(game.getBoard().isACorner(column, row)) {
 						System.out.println("Is missing the direction (V/H)");
-						shootLaser(board, name);
+						shootLaser(game, name);
 					}else {
-						int direction = getDirection(column, row, board.getColumns(), board.getRows());
-						System.out.println(name+": "+board.getMirrorsAdded()+" mirrors remaining");
+						int direction = getDirection(column, row, game.getBoard().getColumns(), game.getBoard().getRows());
+						System.out.println(name+": "+game.getBoard().getMirrorsAdded()+" mirrors remaining");
 						try {
-							System.out.println(board.shootLaser(column, row, direction));
-							shootLaser(board, name);
+							System.out.println(game.getBoard().shootLaser(column, row, direction));
+							shootLaser(game, name);
 						}catch(InvalidGridException ige) {
 							System.out.println(ige.getMessage());
-							shootLaser(board, name);
+							shootLaser(game, name);
 						}
 					}
 				}
 			}else{ //if the first letter is L
-				exposeAMirror(coordinate, length, name);
+				exposeAMirror(game, coordinate, length, name);
 			}
 		}
 	}
 
-	private void exposeAMirror(String coordinate, int length, String name){
+	private void exposeAMirror(Game game, String coordinate, int length, String name){
 		int column = coordinate.charAt(length-2)-64;
 		try{
 			int row = Integer.parseInt(coordinate.substring(1,length-2));
 			if(coordinate.charAt(length-1)!='R' && coordinate.charAt(length-1)!='L'){
 				System.out.println("Invalid inclination. It was expected R or L, but was "+coordinate.charAt(length-1));
-				shootLaser(board, name);
+				shootLaser(game, name);
 			}
 			int inclination=0;
 			switch(coordinate.charAt(length-1)){
@@ -221,16 +222,16 @@ public class Menu {
 					inclination=1;
 					break;
 			}
-			System.out.println(board.exposeAMirror(column, row, inclination, name));
-			if(board.getMirrorsAdded()==0){
+			System.out.println(game.getBoard().exposeAMirror(column, row, inclination, name));
+			if(game.getBoard().getMirrorsAdded()==0){
 				System.out.println("Congratulations you have won!");
 				showMenu();
 			}else{
-				shootLaser(board, name);
+				shootLaser(game, name);
 			}
 		}catch(NumberFormatException nfe){
 			System.out.println("Invalid coordenate. Enter it again");
-			shootLaser(board, name);
+			shootLaser(game, name);
 		}
 		
 
