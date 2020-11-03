@@ -1,6 +1,6 @@
 package model;
 
-public class Player {
+public class Player implements Comparable<Player>{
 	private String nickname;
 	private int score;
 	private int columns;
@@ -81,6 +81,12 @@ public class Player {
 
 	public void setRight(Player right) {
 		this.right = right;
+	}
+
+	@Override
+	public int compareTo(Player otherPlayer) {
+		int comp=score-otherPlayer.getScore();
+		return comp;
 	}
 	
 	
