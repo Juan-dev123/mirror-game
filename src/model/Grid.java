@@ -66,6 +66,31 @@ public class Grid {
 		return mirrorVisible;
 	}
 
+	public void setMirrorVisibility(int typeVisibility){
+		switch(typeVisibility){
+			case 0:
+				mirrorVisible=false;
+				mirrorPartiallyVisible=false;
+				break;
+			case 1:
+				mirrorVisible=true;
+				break;
+			case 2:
+				mirrorPartiallyVisible=true;;
+				break;
+		}
+	}
+
+	public int getMirrorVisibility(){
+		if(mirrorVisible){
+			return 1;
+		}else if(mirrorPartiallyVisible){
+			return 2;
+		}else{
+			return 0;
+		}
+	}
+
 	public String toString(boolean selected, int inclination){
 		String message="";
 		if(selected){

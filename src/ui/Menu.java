@@ -29,7 +29,12 @@ public class Menu {
 		if(option!=3) {
 			switch(option) {
 			case 1:
-				play();
+				int score = play();
+				if(score!=1){
+					System.out.println("Your score is: "+score);
+				}else{
+					System.out.println("The data was not entered correctly so there is no score");
+				}
 				break;
 			case 2:
 				break;
@@ -42,13 +47,14 @@ public class Menu {
 		System.out.println("Goodbye...");
 	}
 	
-	public void play() {
+	public int play() {
 		String[] info = read.nextLine().split(" ");
 		if(info.length!=4) {
 			System.out.println("Enter the information in a correct way");
-			play();
+			return play();
 		}
 		String name=info[0];
+		int score=-1;
 		try {
 			int columns = Integer.parseInt(info[1]);
 			int rows = Integer.parseInt(info[2]);
@@ -56,6 +62,7 @@ public class Menu {
 			board = new Board(columns, rows, mirrors);
 			System.out.println(board.printBoard());
 			shootLaser(board, name);
+			score = board.getScore();
 		}catch(InvalidNumberException ine) {
 			System.out.println(ine.getMessage());
 		}catch(NegativeNumberException nne) {
@@ -63,6 +70,7 @@ public class Menu {
 		}catch(NumberFormatException nfe) {
 			System.out.println("Enter a valid number");
 		}
+		return score;
 	}
 	
 	public int getDirection(int column, int row, int columns, int rows) {
@@ -119,6 +127,14 @@ public class Menu {
 	public void shootLaser(Board board, String name) {
 		String coordinate = read.nextLine().toUpperCase();
 		int length = coordinate.length();
+		if(coordinate.equalsIgnoreCase("cheat")){
+			System.out.println("---------------------------------");
+			System.out.println(board.showMirrors());
+			System.out.println("---------------------------------");
+			System.out.println(name+": "+board.getMirrorsAdded()+" mirrors remaining");
+			System.out.println(board.printBoard());
+			shootLaser(board, name);
+		}
 		if(!coordinate.equalsIgnoreCase("menu")) {
 			if(coordinate.charAt(0)!='L'){
 				if(coordinate.charAt(length-1)=='V' || coordinate.charAt(length-1)=='H') {

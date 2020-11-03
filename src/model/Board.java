@@ -5,10 +5,13 @@ import exceptions.NegativeNumberException;
 
 public class Board {
 	
-	int columns;
-	int rows;
-	int mirrors;
-	int mirrorsAdded;
+	private int columns;
+	private int rows;
+	private int mirrors;
+	private int mirrorsAdded;
+	private boolean cheatActivated;
+	private int maxScore;
+	private int score;
 	private Grid firstGrid;
 	
 	public Board(int columnsP, int rowsP, int mirrorsP) throws InvalidNumberException, NegativeNumberException{
@@ -32,6 +35,9 @@ public class Board {
 		if(mirrorsAdded<mirrors) {
 			addMirrors(firstGrid, 1, 1);
 		}
+		cheatActivated = false;
+		maxScore=(100*mirrors)+(columns*rows);
+		score=0;
 	}
 	
 	private void createBoard(Integer column, Grid last) {
@@ -115,6 +121,7 @@ public class Board {
 		Grid end = shootLaser(start, direction);
 		Grid positionStart = findGrid(column, row, firstGrid);
 		String board = printBoard(positionStart, end);
+		score--;
 		return board;
 	}
 	
@@ -210,14 +217,12 @@ public class Board {
 	}
 	public String printBoard(String board, int row, int column, Grid nextGrid, Grid start, Grid end) {
 		if(column<=columns){
-			if(nextGrid==start){
+			if(end==start){
+				board+=nextGrid.toString("J");
+			}else if(nextGrid==start){
 				board+=nextGrid.toString("S");
 			}else if(nextGrid==end){
-				if(end==start){
-					board+=nextGrid.toString("J");
-				}else{
-					board+=nextGrid.toString("E");
-				}
+				board+=nextGrid.toString("E");
 			}else{
 				board+=nextGrid.toString(false, 0); 
 			}
@@ -266,9 +271,12 @@ public class Board {
 
 	public String exposeAMirror(int column, int row, int inclination, String name){
 		Grid gridToExpose = findGrid(column, row, firstGrid);
+		boolean beforedReveled = gridToExpose.isMirrorVisible();
 		String board = printBoard("", 1, 1, firstGrid, gridToExpose, inclination);
-		if(gridToExpose.isMirrorVisible()){
+		if(gridToExpose.isMirrorVisible() && !beforedReveled){
 			mirrorsAdded--;
+		}else{
+			score-=10;
 		}
 		String message=name+": "+mirrorsAdded+" mirrors\n";
 		return message+board;
@@ -287,6 +295,32 @@ public class Board {
 			isACorner = true;
 		}
 		return isACorner;
+	}
+
+	public String showMirrors(){
+		String board = showMirrors("",1, 1, firstGrid);
+		cheatActivated = true;
+		return board;
+	}
+
+	public String showMirrors(String board,int row, int column, Grid nextGrid){
+		if(column<=columns){
+			if(nextGrid.getTypeMirror()!=0){
+				int originalVisibility = nextGrid.getMirrorVisibility();
+				nextGrid.setMirrorVisibility(1);
+				board+=nextGrid.toString(false, 0);
+				nextGrid.setMirrorVisibility(originalVisibility);
+			}else{
+				board+=nextGrid.toString(false, 0);
+			}
+			return showMirrors(board, row, ++column, nextGrid.getRight());
+		}else if(row<rows){
+			row++;
+			board+="\n";
+			return showMirrors(board, row, 1, getBeginningOfRow(row, firstGrid));
+		}else{
+			return board;
+		}
 	}
 
 	public int getColumns() {
@@ -329,4 +363,13 @@ public class Board {
 		this.firstGrid = firstGrid;
 	}
 	
+	public int getScore(){
+		int mirrorValue = maxScore/mirrors;
+		mirrorValue*=mirrors-mirrorsAdded;
+		score+=mirrorValue;
+		if(cheatActivated || score<0){
+			score = 0;
+		}
+		return score;
+	}
 }
