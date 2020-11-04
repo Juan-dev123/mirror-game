@@ -14,6 +14,14 @@ public class Board {
 	private int score;
 	private Grid firstGrid;
 	
+	/**
+	 * Creates a new object type Board
+	 * @param columnsP The number of columns
+	 * @param rowsP The number of rows
+	 * @param mirrorsP The number of mirrors
+	 * @throws InvalidNumberException If the number of columns is greater than 26 or if the number of mirrors is greter than the number of grids
+	 * @throws NegativeNumberException If the numbers are negatives
+	 */
 	public Board(int columnsP, int rowsP, int mirrorsP) throws InvalidNumberException, NegativeNumberException{
 		columns = columnsP;
 		rows = rowsP;
@@ -40,6 +48,11 @@ public class Board {
 		score=0;
 	}
 	
+	/**
+	 * Creates a board
+	 * @param column The current column
+	 * @param last The last grid
+	 */
 	private void createBoard(Integer column, Grid last) {
 		if(columns==1) {
 			createColumn(1, firstGrid);
@@ -59,6 +72,12 @@ public class Board {
 		}
 	}
 	
+	/**
+	 * Creates a column
+	 * @param row The current row
+	 * @param last The last gird
+	 * @return The last grid created
+	 */
 	private Grid createColumn(Integer row, Grid last) {
 		if(row==1) {
 			return last;
@@ -71,14 +90,26 @@ public class Board {
 		
 	} 
 	
-	private Grid getBeginningOfRow(Integer row, Grid first) {
+	/**
+	 * Returns the first grid of a row
+	 * @param row The row
+	 * @param first The first grid in a row
+	 * @return The grid
+	 */
+	private Grid getBeginningOfRow(int row, Grid first) {
 		if(row>1) {
 			return getBeginningOfRow(--row, first.getDown());
 		}
 		return first;
 	}
 	
-	private void linkRows(Integer row, Grid last1, Grid last2) {
+	/**
+	 * Links two rows
+	 * @param row The current row 
+	 * @param last1 The last grid of one row
+	 * @param last2 The last grid of the other row
+	 */
+	private void linkRows(int row, Grid last1, Grid last2) {
 		if(row>=1) {
 			last1.setRight(last2);
 			last2.setLeft(last1);
@@ -86,6 +117,10 @@ public class Board {
 		}
 	}
 	
+	/**
+	 * Creates a grid
+	 * @return The grid
+	 */
 	private Grid createGrid() {
 		Grid grid;
 		if(mirrorsAdded<mirrors) {
@@ -100,6 +135,12 @@ public class Board {
 		return grid;
 	}
 	
+	/**
+	 * Adds the missing mirrors
+	 * @param next The next grid
+	 * @param row The current row
+	 * @param column The current column
+	 */
 	private void addMirrors(Grid next, int row, int column) {
 		if((row<=rows && column<=columns) || mirrorsAdded<mirrors) {
 			if(column==columns) {
@@ -113,6 +154,14 @@ public class Board {
 		}
 	}
 	
+	/**
+	 * Shoots a laser in the board
+	 * @param column The column
+	 * @param row The row
+	 * @param direction The direction of the laser
+	 * @return A visual representation of the board. The grid where the laser entered has an S, the grid where the laser came out has an E. If the grid exits where it enters, so the grid has an J
+	 * @throws InvalidGridException If the grid is in the center
+	 */
 	public String shootLaser(int column, int row, int direction) throws InvalidGridException{
 		Grid start = findGrid(column, row, firstGrid);
 		if(start.getDown()!=null && start.getUp()!=null && start.getLeft()!=null && start.getRight()!=null) {
@@ -125,6 +174,12 @@ public class Board {
 		return board;
 	}
 	
+	/**
+	 * Shoots a laser in a grid
+	 * @param nextGrid The grid
+	 * @param direction The direction
+	 * @return The grid where the laser came out
+	 */
 	private Grid shootLaser(Grid nextGrid, int direction) {
 		switch(nextGrid.getTypeMirror()) {
 		//Left
@@ -202,6 +257,13 @@ public class Board {
 		}
 	}
 	
+	/**
+	 * Finds a grid in the board given the column and the row
+	 * @param column The column
+	 * @param row The row
+	 * @param grid The current grid
+	 * @return The searched grid
+	 */
 	private Grid findGrid(int column, int row, Grid grid) {
 		if(row>1) {
 			return findGrid(column, --row, grid.getDown());
@@ -211,10 +273,28 @@ public class Board {
 			return grid;
 		}
 	}
+
+	/**
+	 * Creates a visual representation of the board after the laser passed through it
+	 * @param start The grid where the laser entered
+	 * @param end The grid where the laser came out
+	 * @return A visual representation of the board. The grid where the laser entered has an S, the grid where the laser came out has an E. If the grid exits where it enters, so the grid has an J
+	 */
 	private String printBoard(Grid start, Grid end) {
 		String board=printBoard("", 1, 1, firstGrid, start, end);
 		return board;
 	}
+
+	/**
+	 * Creates a visual representation of the board after the laser passed through it
+	 * @param board The visual representation of the board
+	 * @param row The current row
+	 * @param column The current column
+	 * @param nextGrid The current grid
+	 * @param start The grid where the laser entered
+	 * @param end The grid where the laser came out
+	 * @return
+	 */
 	public String printBoard(String board, int row, int column, Grid nextGrid, Grid start, Grid end) {
 		if(column<=columns){
 			if(end==start){
@@ -235,10 +315,23 @@ public class Board {
 			return board;
 		}
 	}
+	/**
+	 * Creates a visual representation of the board
+	 * @return The visual representation of the board
+	 */
 	public String printBoard(){
 		String board=printBoard("", 1, 1, firstGrid);
 		return board;
 	}
+
+	/**
+	 * Creates a visual representation of the board
+	 * @param board The visual representation of the board
+	 * @param row The current row
+	 * @param column The current column
+	 * @param nextGrid The current grid
+	 * @return The visual representation of the board
+	 */
 	public String printBoard(String board, int row, int column, Grid nextGrid) {
 		if(column<=columns){
 			board+=nextGrid.toString(false, 0); 
@@ -252,7 +345,17 @@ public class Board {
 		}
 	}
 	
-	public String printBoard(String board, int row, int column, Grid nextGrid, Grid selected, int inclination) {
+	/**
+	 * Creates a visual representation of the board when the user chooses a grid that may have a mirror
+	 * @param board The visual representation of the board
+	 * @param row The current row
+	 * @param column The current column
+	 * @param nextGrid The current grid
+	 * @param selected The grid chosen
+	 * @param inclination The inclination of the mirror
+	 * @return A visual representation of the board. If the selected grid does not have a mirror, then it will be marked with an X. If the selected grid has a mirror but the inclination is not the same as the user says, then it will be marked with *. If the selected grid has a mirror and the inclination is the same as the user says, then it will be marked with / or \
+	 */
+	private String printBoard(String board, int row, int column, Grid nextGrid, Grid selected, int inclination) {
 		if(column<=columns){
 			if(selected==nextGrid){
 				board+=nextGrid.toString(true, inclination);
@@ -269,6 +372,14 @@ public class Board {
 		}
 	}
 
+	/**
+	 * Creates a visual representation of the board when the user chooses a grid that may have a mirror
+	 * @param column The column of the grid chosen
+	 * @param row The row of the grid chosen
+	 * @param inclination The inclination of the mirror
+	 * @param name The nickname of the player
+	 * @return The nickname of the user and the mirrors remaining and a visual representation of the board. If the selected grid does not have a mirror, then it will be marked with an X. If the selected grid has a mirror but the inclination is not the same as the user says, then it will be marked with *. If the selected grid has a mirror and the inclination is the same as the user says, then it will be marked with / or \ 
+	 */
 	public String exposeAMirror(int column, int row, int inclination, String name){
 		Grid gridToExpose = findGrid(column, row, firstGrid);
 		boolean beforedReveled = gridToExpose.isMirrorVisible();
@@ -282,6 +393,12 @@ public class Board {
 		return message+board;
 	}
 
+	/**
+	 * Evaluates if a grid is a corner given its coordinates
+	 * @param column The column where is the grid
+	 * @param row The row where is the grid
+	 * @return True if the grid is a corner. False if it is not
+	 */
 	public boolean isACorner(int column, int row) {
 		boolean isACorner = false;
 		Grid grid=findGrid(column, row, firstGrid);
@@ -297,13 +414,25 @@ public class Board {
 		return isACorner;
 	}
 
+	/**
+	 * Creates a visual representation of the board with all the mirrors visible
+	 * @return The visual representation of the board
+	 */
 	public String showMirrors(){
 		String board = showMirrors("",1, 1, firstGrid);
 		cheatActivated = true;
 		return board;
 	}
 
-	public String showMirrors(String board,int row, int column, Grid nextGrid){
+	/**
+	 * Creates a visual representation of the board with all the mirrors visible
+	 * @param board The visual representation of the board
+	 * @param row The current row
+	 * @param column The current column
+	 * @param nextGrid The current grid
+	 * @return The visual representation of the board
+	 */
+	private String showMirrors(String board,int row, int column, Grid nextGrid){
 		if(column<=columns){
 			if(nextGrid.getTypeMirror()!=0){
 				int originalVisibility = nextGrid.getMirrorVisibility();
@@ -323,46 +452,50 @@ public class Board {
 		}
 	}
 
+	/**
+	 * Returns the number of columns of the board
+	 * @return The number of columns
+	 */
 	public int getColumns() {
 		return columns;
 	}
 
-	public void setColumns(int columns) {
-		this.columns = columns;
-	}
-
+	/**
+	 * Returns the number of rows of the board
+	 * @return The number of rows
+	 */
 	public int getRows() {
 		return rows;
 	}
 
-	public void setRows(int rows) {
-		this.rows = rows;
-	}
-
+	/**
+	 * Returns the number of mirrors in the board
+	 * @return The number of mirrors
+	 */
 	public int getMirrors() {
 		return mirrors;
 	}
 
-	public void setMirrors(int mirrors) {
-		this.mirrors = mirrors;
-	}
-
+	/**
+	 * Returns the number of mirrors that the user still has to find
+	 * @return The number of mirrors
+	 */
 	public int getMirrorsAdded() {
 		return mirrorsAdded;
 	}
 
-	public void setMirrorsAdded(int mirrorsAdded) {
-		this.mirrorsAdded = mirrorsAdded;
-	}
-
+	/**
+	 * Returns the first grid
+	 * @return The first grid
+	 */
 	public Grid getFirstGrid() {
 		return firstGrid;
 	}
-
-	public void setFirstGrid(Grid firstGrid) {
-		this.firstGrid = firstGrid;
-	}
 	
+	/**
+	 * Returns the score that the player obtained
+	 * @return
+	 */
 	public int getScore(){
 		int mirrorValue = maxScore/mirrors;
 		mirrorValue*=mirrors-mirrorsAdded;
@@ -372,4 +505,6 @@ public class Board {
 		}
 		return score;
 	}
+
+
 }

@@ -11,11 +11,17 @@ public class Menu {
 	private Scanner read;
 	private Game mirrorGame;
 	
+	/**
+	 * Creates an object type Menu
+	 */
 	public Menu() {
 		read = new Scanner(System.in);
 		mirrorGame = new Game();
 	}
 	
+	/**
+	 * Prints a menu on console
+	 */
 	public void showMenu() {
 		System.out.println("What do you want to do?");
 		System.out.println("1 Play");
@@ -26,6 +32,10 @@ public class Menu {
 		
 	}
 	
+	/**
+	 * Executes an option of the menu
+	 * @param option The option
+	 */
 	public void runOption(int option) {
 		if(option!=3) {
 			switch(option) {
@@ -48,6 +58,10 @@ public class Menu {
 		System.out.println("Goodbye...");
 	}
 	
+	/**
+	 * Starts the game
+	 * @return The score of the game
+	 */
 	public int play() {
 		String[] info = read.nextLine().split(" ");
 		if(info.length!=4) {
@@ -74,6 +88,14 @@ public class Menu {
 		return score;
 	}
 	
+	/**
+	 * Returns the direction the laser exits depending on where it enters
+	 * @param column The column where it enters
+	 * @param row The row where it enters
+	 * @param columns The columns
+	 * @param rows The rows
+	 * @return The direction the lasers exits. 1 if the laser goes up. 2 if the laser goes down. 3 if the laser goes to the left. 4 if the laser goes to the right 
+	 */
 	public int getDirection(int column, int row, int columns, int rows) {
 		int direction;
 		if(row==1) {
@@ -88,6 +110,15 @@ public class Menu {
 		return direction;
 	}
 	
+	/**
+	 * Returns the direction the laser exits depending on what corner it enters. 
+	 * @param column The column where it enters
+	 * @param row The row where it enters
+	 * @param columns The columns
+	 * @param rows The rows
+	 * @param direction1 V if the laser goes vertically. H if the laser goes horizontally
+	 * @return The direction the lasers exits. 1 if the laser goes up. 2 if the laser goes down. 3 if the laser goes to the left. 4 if the laser goes to the right 
+	 */
 	public int getDirection(int column, int row, int columns, int rows, char direction1) {
 		int direction2;
 		if(row==1) {
@@ -125,6 +156,11 @@ public class Menu {
 		return direction2;
 	}
 	
+	/**
+	 * Shoots a laser in the game
+	 * @param game The game
+	 * @param name The name of the player
+	 */
 	public void shootLaser(Game game, String name) {
 		String coordinate = read.nextLine().toUpperCase();
 		int length = coordinate.length();
@@ -202,9 +238,18 @@ public class Menu {
 			}else{ //if the first letter is L
 				exposeAMirror(game, coordinate, length, name);
 			}
+		}else{
+			game.addPlayer(name, game.getBoard().getScore(), game.getBoard().getColumns(), game.getBoard().getRows(), game.getBoard().getMirrors());
 		}
 	}
 
+	/**
+	 * Pick a grid where a mirror could be.
+	 * @param game The game
+	 * @param coordinate The coordinate of the grid
+	 * @param length The length of the coordinate
+	 * @param name The name of the player
+	 */
 	private void exposeAMirror(Game game, String coordinate, int length, String name){
 		int column = coordinate.charAt(length-2)-64;
 		try{
@@ -225,6 +270,7 @@ public class Menu {
 			System.out.println(game.getBoard().exposeAMirror(column, row, inclination, name));
 			if(game.getBoard().getMirrorsAdded()==0){
 				System.out.println("Congratulations you have won!");
+				game.addPlayer(name, game.getBoard().getScore(), game.getBoard().getColumns(), game.getBoard().getRows(), game.getBoard().getMirrors());
 				showMenu();
 			}else{
 				shootLaser(game, name);
@@ -233,8 +279,6 @@ public class Menu {
 			System.out.println("Invalid coordenate. Enter it again");
 			shootLaser(game, name);
 		}
-		
-
 	}
 }
 

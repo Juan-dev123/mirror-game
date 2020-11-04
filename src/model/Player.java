@@ -10,7 +10,15 @@ public class Player implements Comparable<Player>{
 	private Player father;
 	private Player left;
 	private Player right;
-	
+
+	/**
+	 * Creates an object type Player
+	 * @param nicknameP The nickname
+	 * @param scoreP The score
+	 * @param columnsP The number of columns of the board where he or she played
+	 * @param rowsP The number of rows of the board where he or she played
+	 * @param mirrorsP The number of mirrors in the board where he or she played
+	 */
 	public Player(String nicknameP, int scoreP, int columnsP, int rowsP, int mirrorsP) {
 		nickname = nicknameP;
 		score = scoreP;
@@ -19,66 +27,90 @@ public class Player implements Comparable<Player>{
 		mirrors = mirrorsP;
 	}
 
+	/**
+	 * Returns the nickname
+	 * @return The nickname
+	 */
 	public String getNickname() {
 		return nickname;
 	}
 
-	public void setNickname(String nickname) {
-		this.nickname = nickname;
-	}
-
+	/**
+	 * Returns the score
+	 * @return The score
+	 */
 	public int getScore() {
 		return score;
 	}
 
-	public void setScore(int score) {
-		this.score = score;
-	}
-
+	/**
+	 * Returns the number of columns of the board where he or she played
+	 * @return The number of columns
+	 */
 	public int getColumns() {
 		return columns;
 	}
 
-	public void setColumns(int columns) {
-		this.columns = columns;
-	}
-
+	/**
+	 * Returns the number of rows of the board where he or she played
+	 * @return The number of rows
+	 */
 	public int getRows() {
 		return rows;
 	}
 
-	public void setRows(int rows) {
-		this.rows = rows;
-	}
-
+	/**
+	 * Returns the number of mirrors in the board where he or she played
+	 * @return The number of mirrors
+	 */
 	public int getMirrors() {
 		return mirrors;
 	}
 
-	public void setMirrors(int mirrors) {
-		this.mirrors = mirrors;
-	}
-
+	/**
+	 * Returns the father, that is, the grid that is above 
+	 * @return The father
+	 */
 	public Player getFather() {
 		return father;
 	}
 
+	/**
+	 * Sets the father, that is, the grid that is above 
+	 * @param father The father
+	 */
 	public void setFather(Player father) {
 		this.father = father;
 	}
 
+	/**
+	 * Returns the child located to the left
+	 * @return The child located to the left
+	 */
 	public Player getLeft() {
 		return left;
 	}
 
+	/**
+	 * Sets the child located to the left
+	 * @param left The child located to the left
+	 */
 	public void setLeft(Player left) {
 		this.left = left;
 	}
 
+	/**
+	 * Returns the child located to the right
+	 * @return The child located to the right
+	 */
 	public Player getRight() {
 		return right;
 	}
 
+	/**
+	 * 
+	 * @param right
+	 */
 	public void setRight(Player right) {
 		this.right = right;
 	}
