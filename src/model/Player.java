@@ -125,6 +125,11 @@ public class Player implements Comparable<Player>, Serializable{
 		return comp;
 	}
 	
+	@Override
+	public String toString(){
+		String message = nickname+" - "+score+"\n";
+		return message;
+	}
 	
 	
 	

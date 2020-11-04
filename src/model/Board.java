@@ -297,10 +297,12 @@ public class Board {
 	 */
 	public String printBoard(String board, int row, int column, Grid nextGrid, Grid start, Grid end) {
 		if(column<=columns){
-			if(end==start){
-				board+=nextGrid.toString("J");
-			}else if(nextGrid==start){
-				board+=nextGrid.toString("S");
+			if(nextGrid==start){
+				if(end==start){
+					board+=nextGrid.toString("J");
+				}else{
+					board+=nextGrid.toString("S");
+				}
 			}else if(nextGrid==end){
 				board+=nextGrid.toString("E");
 			}else{
@@ -499,11 +501,12 @@ public class Board {
 	public int getScore(){
 		int mirrorValue = maxScore/mirrors;
 		mirrorValue*=mirrors-mirrorsAdded;
-		score+=mirrorValue;
+		int finalScore = score;
+		finalScore+=mirrorValue;
 		if(cheatActivated || score<0){
 			score = 0;
 		}
-		return score;
+		return finalScore;
 	}
 
 

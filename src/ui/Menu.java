@@ -46,13 +46,14 @@ public class Menu {
 			switch(option) {
 			case 1:
 				int score = play();
-				if(score!=1){
+				if(score!=-1){
 					System.out.println("Your score is: "+score);
 				}else{
 					System.out.println("The data was not entered correctly so there is no score");
 				}
 				break;
 			case 2:
+				printPlayers();
 				break;
 			default:
 				System.out.println("Enter a valid number");
@@ -281,6 +282,9 @@ public class Menu {
 			if(game.getBoard().getMirrorsAdded()==0){
 				System.out.println("Congratulations you have won!");
 				game.addPlayer(name, game.getBoard().getScore(), game.getBoard().getColumns(), game.getBoard().getRows(), game.getBoard().getMirrors());
+				int score = mirrorGame.getBoard().getScore();
+				System.out.println("Your score is: "+score);
+				mirrorGame.saveData();
 				showMenu();
 			}else{
 				shootLaser(game, name);
@@ -288,7 +292,18 @@ public class Menu {
 		}catch(NumberFormatException nfe){
 			System.out.println("Invalid coordenate. Enter it again");
 			shootLaser(game, name);
+		}catch(FileNotFoundException fne){
+			System.out.println("The file was not found");
+		}catch(IOException ioe){
+			System.out.println("There were problems saving the player");
 		}
+	}
+
+	/**
+	 * Prints on console the players in ascending order
+	 */
+	public void printPlayers(){
+		System.out.print(mirrorGame.printPlayers());
 	}
 }
 
