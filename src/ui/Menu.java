@@ -1,5 +1,7 @@
 package ui;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Scanner;
 
 import exceptions.InvalidGridException;
@@ -13,8 +15,11 @@ public class Menu {
 	
 	/**
 	 * Creates an object type Menu
+	 * @throws IOException
+	 * @throws ClassNotFoundException
+	 * @throws FileNotFoundException
 	 */
-	public Menu() {
+	public Menu() throws FileNotFoundException, ClassNotFoundException, IOException {
 		read = new Scanner(System.in);
 		mirrorGame = new Game();
 	}
@@ -78,12 +83,17 @@ public class Menu {
 			System.out.println(mirrorGame.getBoard().printBoard());
 			shootLaser(mirrorGame, name);
 			score = mirrorGame.getBoard().getScore();
+			mirrorGame.saveData();
 		}catch(InvalidNumberException ine) {
 			System.out.println(ine.getMessage());
 		}catch(NegativeNumberException nne) {
 			System.out.println(nne.getMessage());
 		}catch(NumberFormatException nfe) {
 			System.out.println("Enter a valid number");
+		}catch(FileNotFoundException fne){
+			System.out.println("The file was not found");
+		}catch(IOException ioe){
+			System.out.println("There were problems saving the player");
 		}
 		return score;
 	}
