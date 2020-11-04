@@ -112,8 +112,8 @@ public class Player implements Comparable<Player>, Serializable{
 	}
 
 	/**
-	 * 
-	 * @param right
+	 * Sets the child located to the right
+	 * @param right The child located to the right
 	 */
 	public void setRight(Player right) {
 		this.right = right;

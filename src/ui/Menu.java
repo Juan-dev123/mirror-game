@@ -3,7 +3,6 @@ package ui;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Scanner;
-
 import exceptions.InvalidGridException;
 import exceptions.InvalidNumberException;
 import exceptions.NegativeNumberException;

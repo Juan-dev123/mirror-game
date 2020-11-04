@@ -53,7 +53,7 @@ public class Board {
 	 * @param column The current column
 	 * @param last The last grid
 	 */
-	private void createBoard(Integer column, Grid last) {
+	private void createBoard(int column, Grid last) {
 		if(columns==1) {
 			createColumn(1, firstGrid);
 		}else if(column<columns) {
@@ -78,7 +78,7 @@ public class Board {
 	 * @param last The last gird
 	 * @return The last grid created
 	 */
-	private Grid createColumn(Integer row, Grid last) {
+	private Grid createColumn(int row, Grid last) {
 		if(row==1) {
 			return last;
 		}else {
