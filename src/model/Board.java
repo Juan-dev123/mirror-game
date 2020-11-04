@@ -391,7 +391,7 @@ public class Board {
 		}else{
 			score-=10;
 		}
-		String message=name+": "+mirrorsAdded+" mirrors\n";
+		String message=name+": "+mirrorsAdded+" mirrors remaining\n";
 		return message+board;
 	}
 
@@ -503,8 +503,8 @@ public class Board {
 		mirrorValue*=mirrors-mirrorsAdded;
 		int finalScore = score;
 		finalScore+=mirrorValue;
-		if(cheatActivated || score<0){
-			score = 0;
+		if(cheatActivated || finalScore<0){
+			finalScore = 0;
 		}
 		return finalScore;
 	}

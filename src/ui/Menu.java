@@ -33,7 +33,7 @@ public class Menu {
 		System.out.println("3 Exit");
 		int option = Integer.parseInt(read.nextLine());
 		runOption(option);
-		
+		System.out.println("Goodbye...");
 	}
 	
 	/**
@@ -60,7 +60,6 @@ public class Menu {
 			}
 			showMenu();
 		}
-		System.out.println("Goodbye...");
 	}
 	
 	/**
@@ -193,10 +192,20 @@ public class Menu {
 							int column = coordinate.charAt(length-2)-64;
 							try{
 								int row = Integer.parseInt(coordinate.substring(0, length-2));
-								int direction = getDirection(column, row, game.getBoard().getColumns(), game.getBoard().getRows(), coordinate.charAt(length-1));
-								System.out.println(name+": "+game.getBoard().getMirrorsAdded()+" mirrors remaining");
-								System.out.println(game.getBoard().shootLaser(column, row, direction));
-								shootLaser(game, name);
+								if(areColumnAndRowRight(column, row)){
+									if(!game.getBoard().isACorner(column, row)){
+										System.out.println("Invalid coordenate. Enter it again");
+										shootLaser(game, name);
+									}else{
+										int direction = getDirection(column, row, game.getBoard().getColumns(), game.getBoard().getRows(), coordinate.charAt(length-1));
+										System.out.println(name+": "+game.getBoard().getMirrorsAdded()+" mirrors remaining");
+										System.out.println(game.getBoard().shootLaser(column, row, direction));
+										shootLaser(game, name);
+									}
+								}else{
+									System.out.println("Invalid coordenate, that grid does not exist. Enter it again");
+									shootLaser(game, name);
+								}
 							}catch(NumberFormatException nfe) {
 								System.out.println("Invalid coordenate. Enter it again");
 								shootLaser(game, name);
@@ -209,13 +218,18 @@ public class Menu {
 						int column = coordinate.charAt(length-1)-64;
 						try{
 							int row = Integer.parseInt(coordinate.substring(0, length-1));
-							if(game.getBoard().isACorner(column, row)) {
-								System.out.println("Is missing the direction (V/H)");
-								shootLaser(game, name);
-							}else {
-								int direction = getDirection(column, row, game.getBoard().getColumns(), game.getBoard().getRows());
-								System.out.println(name+": "+game.getBoard().getMirrorsAdded()+" mirrors remaining");
-								System.out.println(game.getBoard().shootLaser(column, row, direction));
+							if(areColumnAndRowRight(column, row)){
+								if(game.getBoard().isACorner(column, row)) {
+									System.out.println("Is missing the direction (V/H)");
+									shootLaser(game, name);
+								}else {
+									int direction = getDirection(column, row, game.getBoard().getColumns(), game.getBoard().getRows());
+									System.out.println(name+": "+game.getBoard().getMirrorsAdded()+" mirrors remaining");
+									System.out.println(game.getBoard().shootLaser(column, row, direction));
+									shootLaser(game, name);
+								}
+							}else{
+								System.out.println("Invalid coordenate, that grid does not exist. Enter it again");
 								shootLaser(game, name);
 							}
 						}catch(NumberFormatException nfe){
@@ -229,21 +243,30 @@ public class Menu {
 					}	
 				}else {
 					int column = coordinate.charAt(length-1)-64;
-					int row = Integer.parseInt(coordinate.substring(0, length-1));
-					if(game.getBoard().isACorner(column, row)) {
-						System.out.println("Is missing the direction (V/H)");
-						shootLaser(game, name);
-					}else {
-						int direction = getDirection(column, row, game.getBoard().getColumns(), game.getBoard().getRows());
-						System.out.println(name+": "+game.getBoard().getMirrorsAdded()+" mirrors remaining");
-						try {
-							System.out.println(game.getBoard().shootLaser(column, row, direction));
-							shootLaser(game, name);
-						}catch(InvalidGridException ige) {
-							System.out.println(ige.getMessage());
+					try{
+						int row = Integer.parseInt(coordinate.substring(0, length-1));
+						if(areColumnAndRowRight(column, row)){
+							if(game.getBoard().isACorner(column, row)) {
+								System.out.println("Is missing the direction (V/H)");
+								shootLaser(game, name);
+							}else {
+								int direction = getDirection(column, row, game.getBoard().getColumns(), game.getBoard().getRows());
+								System.out.println(name+": "+game.getBoard().getMirrorsAdded()+" mirrors remaining");
+								System.out.println(game.getBoard().shootLaser(column, row, direction));
+								shootLaser(game, name);
+							}
+						}else{
+							System.out.println("Invalid coordenate, that grid does not exist. Enter it again");
 							shootLaser(game, name);
 						}
+					}catch(InvalidGridException ige) {
+						System.out.println(ige.getMessage());
+						shootLaser(game, name);
+					}catch(NumberFormatException nfe){
+						System.out.println("Invalid coordenate. Enter it again");
+						shootLaser(game, name);
 					}
+					
 				}
 			}else{ //if the first letter is L
 				exposeAMirror(game, coordinate, length, name);
@@ -277,17 +300,23 @@ public class Menu {
 					inclination=1;
 					break;
 			}
-			System.out.println(game.getBoard().exposeAMirror(column, row, inclination, name));
-			if(game.getBoard().getMirrorsAdded()==0){
-				System.out.println("Congratulations you have won!");
-				game.addPlayer(name, game.getBoard().getScore(), game.getBoard().getColumns(), game.getBoard().getRows(), game.getBoard().getMirrors());
-				int score = mirrorGame.getBoard().getScore();
-				System.out.println("Your score is: "+score);
-				mirrorGame.saveData();
-				showMenu();
+			if(areColumnAndRowRight(column, row)){
+				System.out.println(game.getBoard().exposeAMirror(column, row, inclination, name));
+				if(game.getBoard().getMirrorsAdded()==0){
+					System.out.println("Congratulations you have won!");
+					game.addPlayer(name, game.getBoard().getScore(), game.getBoard().getColumns(), game.getBoard().getRows(), game.getBoard().getMirrors());
+					int score = mirrorGame.getBoard().getScore();
+					System.out.println("Your score is: "+score);
+					mirrorGame.saveData();
+					showMenu();
+				}else{
+					shootLaser(game, name);
+				}
 			}else{
+				System.out.println("Invalid coordenate, that grid does not exist. Enter it again");
 				shootLaser(game, name);
 			}
+			
 		}catch(NumberFormatException nfe){
 			System.out.println("Invalid coordenate. Enter it again");
 			shootLaser(game, name);
@@ -303,6 +332,14 @@ public class Menu {
 	 */
 	public void printPlayers(){
 		System.out.print(mirrorGame.printPlayers());
+	}
+
+	public boolean areColumnAndRowRight(int column, int row){
+		boolean right = true;
+		if(mirrorGame.getBoard().getColumns()<column || mirrorGame.getBoard().getRows()<row || column<1 || row<1){
+			right = false;
+		}
+		return right;
 	}
 }
 
