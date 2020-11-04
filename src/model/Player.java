@@ -136,7 +136,7 @@ public class Player implements Comparable<Player>, Serializable{
 	 */
 	@Override
 	public String toString(){
-		String message = nickname+" - "+score+"\n";
+		String message = nickname+" - "+score+". The board where he or she played had "+columns+" column(s), "+rows+" row(s) and "+mirrors+" mirror(s)\n";
 		return message;
 	}
 	

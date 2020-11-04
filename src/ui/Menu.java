@@ -164,6 +164,8 @@ public class Menu {
 		}
 		return direction2;
 	}
+
+	//If you want to see all the mirrors write cheat, but remember that your score will be 0
 	
 	/**
 	 * Shoots a laser in the game

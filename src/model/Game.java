@@ -15,6 +15,7 @@ public class Game {
 
 	private Player root;
 	private Board board;
+	private int positions;
 
 	/**
 	 * Creates an object type Game
@@ -111,6 +112,7 @@ public class Game {
 	 */
 	public String printPlayers(){
 		String players;
+		positions=0;
 		if(root==null){
 			players="There are no players to show";
 		}else{
@@ -129,7 +131,8 @@ public class Game {
 		if(temporalRoot.getLeft()!=null){
 			players = printPlayers(players, temporalRoot.getLeft());
 		}
-		players+=temporalRoot.toString();
+		positions++;
+		players+=positions+" "+temporalRoot.toString();
 		if(temporalRoot.getRight()!=null){
 			players = printPlayers(players, temporalRoot.getRight());
 		}
