@@ -28,9 +28,9 @@ public class Game {
 
 	/**
 	 * Creates a board
-	 * @param columnsP The number of columns
-	 * @param rowsP    The number of rows
-	 * @param mirrorsP The number of mirrors
+	 * @param columns The number of columns
+	 * @param rows    The number of rows
+	 * @param mirrors The number of mirrors
 	 * @throws InvalidNumberException  If the number of columns is greater than 26 or if the number of mirrors is greter than the number of grids
 	 * @throws NegativeNumberException If the numbers are negatives
 	 */

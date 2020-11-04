@@ -16,6 +16,7 @@ public class Grid {
 	private Grid up;
 	private Grid down;
 	private Mirror typeMirror;
+	
 	private boolean mirrorVisible; 
 	private boolean mirrorPartiallyVisible;
 	

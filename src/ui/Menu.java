@@ -14,9 +14,9 @@ public class Menu {
 	
 	/**
 	 * Creates an object type Menu
-	 * @throws IOException
-	 * @throws ClassNotFoundException
-	 * @throws FileNotFoundException
+	 * @throws IOException If an I/O error occurs while reading the file
+	 * @throws ClassNotFoundException If there is a problem converting the file to a class Player
+	 * @throws FileNotFoundException If the file is not found
 	 */
 	public Menu() throws FileNotFoundException, ClassNotFoundException, IOException {
 		read = new Scanner(System.in);
@@ -334,6 +334,12 @@ public class Menu {
 		System.out.print(mirrorGame.printPlayers());
 	}
 
+	/**
+	 * Checks if the column and the row have a valid number
+	 * @param column The column
+	 * @param row The row
+	 * @return True if column and row have a valid number. False if they do not
+	 */
 	public boolean areColumnAndRowRight(int column, int row){
 		boolean right = true;
 		if(mirrorGame.getBoard().getColumns()<column || mirrorGame.getBoard().getRows()<row || column<1 || row<1){

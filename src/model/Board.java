@@ -293,7 +293,7 @@ public class Board {
 	 * @param nextGrid The current grid
 	 * @param start The grid where the laser entered
 	 * @param end The grid where the laser came out
-	 * @return
+	 * @return A visual representation of the board after the laser passed through it
 	 */
 	public String printBoard(String board, int row, int column, Grid nextGrid, Grid start, Grid end) {
 		if(column<=columns){
@@ -496,7 +496,7 @@ public class Board {
 	
 	/**
 	 * Returns the score that the player obtained
-	 * @return
+	 * @return The score of the player
 	 */
 	public int getScore(){
 		int mirrorValue = maxScore/mirrors;

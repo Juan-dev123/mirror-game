@@ -119,12 +119,21 @@ public class Player implements Comparable<Player>, Serializable{
 		this.right = right;
 	}
 
+	/**
+	 * Compares two players by the score
+	 * @param otherPlayer The other player
+	 * @return A number greater than zero if the other player is minor. A number less than zero if the other player is major. Zero if the score of the players are equals
+	 */
 	@Override
 	public int compareTo(Player otherPlayer) {
 		int comp=score-otherPlayer.getScore();
 		return comp;
 	}
 	
+	/**
+	 * Returns the nickname and the score of the player
+	 * @return The nickname and the score of the player 
+	 */
 	@Override
 	public String toString(){
 		String message = nickname+" - "+score+"\n";

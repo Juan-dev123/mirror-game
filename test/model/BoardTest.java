@@ -1,9 +1,7 @@
 package model;
 
 import static org.junit.jupiter.api.Assertions.*;
-
 import org.junit.jupiter.api.Test;
-
 import exceptions.InvalidNumberException;
 import exceptions.NegativeNumberException;
 
@@ -14,7 +12,7 @@ class BoardTest {
 		game = new Board(3, 4, 8);
 	}
 	@Test
-	void test() {
+	public void test() {
 		try {
 			setupScenary();
 			assertNotNull(game.getFirstGrid());
